@@ -13,6 +13,7 @@ from hydra import compose
 from hydra.core.hydra_config import HydraConfig
 from hydra.utils import get_original_cwd, instantiate
 from omegaconf import DictConfig, OmegaConf
+from prettytable import PrettyTable
 
 from src.trainer import Trainer
 from src.utils import prepare_device
@@ -26,6 +27,20 @@ torch.manual_seed(SEED)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 np.random.seed(SEED)
+
+
+def count_parameters(model):
+    table = PrettyTable(["Modules", "Parameters"])
+    total_params = 0
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad:
+            continue
+        params = parameter.numel()
+        table.add_row([name, params])
+        total_params += params
+    print(table)
+    print(f"Total Trainable Params: {total_params}")
+    return total_params
 
 
 @hydra.main(version_base=None, config_path="src/config", config_name="train")
@@ -50,6 +65,7 @@ def main(cfg: DictConfig):
 
     # build model architecture, then print to console
     model = instantiate(cfg["arch"])
+    count_parameters(model)
     logger.info(model)
 
     # prepare for (multi-device) GPU training

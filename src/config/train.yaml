@@ -4,19 +4,17 @@ hydra:
 
 data:
   train:
-    batch_size: 4
-    num_workers: 0
+    batch_size: 8
+    num_workers: 8
     datasets: 
       - _target_: src.datasets.CustomDirAudioDataset
         data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/train_mixtures"
-        limit: 4
-  # val:
-  #   batch_size: 1
-  #   num_workers: 1
-  #   datasets:
-  #     - _target_: src.datasets.CustomDirAudioDataset
-  #       data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/val_mixtures"
-  #       limit: 1
+  val:
+    batch_size: 1
+    num_workers: 1
+    datasets:
+      - _target_: src.datasets.CustomDirAudioDataset
+        data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/val_mixtures"
 preprocessing:
   sr: 16000
 arch:

@@ -76,6 +76,7 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     s1, _ = sf.read(os.path.join("", s1_path))
     s2, _ = sf.read(os.path.join("", s2_path))
     ref, _ = sf.read(os.path.join("", ref_path))
+    ref = ref[: 16000 * 7]
 
     meter = pyln.Meter(sr)  # create BS.1770 meter
 
@@ -83,9 +84,9 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     louds2 = meter.integrated_loudness(s2)
     loudsRef = meter.integrated_loudness(ref)
 
-    s1Norm = pyln.normalize.loudness(s1, louds1, -29)
-    s2Norm = pyln.normalize.loudness(s2, louds2, -29)
-    refNorm = pyln.normalize.loudness(ref, loudsRef, -23.0)
+    s1Norm = pyln.normalize.loudness(s1, louds1, -20.0)
+    s2Norm = pyln.normalize.loudness(s2, louds2, -20.0)
+    refNorm = pyln.normalize.loudness(ref, loudsRef, -20.0)
 
     amp_s1 = np.max(np.abs(s1Norm))
     amp_s2 = np.max(np.abs(s2Norm))
@@ -112,7 +113,11 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
         out_dir, f"refs/{target_id}_{noise_id}_" + "%06d" % idx + "-ref.wav"
     )
 
-    snr = np.random.choice(snr_levels, 1).item()
+    snr = np.clip(
+        np.random.normal(snr_levels["loc"], snr_levels["scale"] / 3),
+        -snr_levels["scale"],
+        snr_levels["scale"],
+    )
 
     if not test:
         if vad_db:
@@ -236,7 +241,13 @@ class MixtureGenerator:
 
         return triplets
 
-    def generate_mixes(self, snr_levels=[0], num_workers=10, update_steps=10, **kwargs):
+    def generate_mixes(
+        self,
+        snr_levels={"loc": 0.0, "scale": 0.0},
+        num_workers=10,
+        update_steps=10,
+        **kwargs,
+    ):
         triplets = self.generate_triplets()
 
         with ProcessPoolExecutor(max_workers=num_workers) as pool:

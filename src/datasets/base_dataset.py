@@ -51,6 +51,8 @@ class BaseDataset(Dataset):
                 f"{audio_type}_path": audio_path,
             }
             item_dict.update(type_dict)
+        if np.random.uniform() > 0.005:
+            item_dict["mix_audio"] = item_dict["target_audio"]
         item_dict["ref_speaker_id"] = data_dict["ref_speaker_id"]
         item_dict["ref_target"] = data_dict["ref_target"]
         return item_dict

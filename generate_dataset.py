@@ -85,16 +85,16 @@ def main(
     )
 
     mixer_train.generate_mixes(
-        snr_levels=[0],
+        snr_levels={"loc": 0, "scale": 5},
         num_workers=num_workers,
         update_steps=100,
-        trim_db=None,
-        vad_db=None,
+        trim_db=20,
+        vad_db=20,
         audioLen=3,
     )
 
     mixer_val.generate_mixes(
-        snr_levels=[0],
+        snr_levels={"loc": 0, "scale": 0},
         num_workers=num_workers,
         update_steps=100,
         trim_db=None,

@@ -1,0 +1,28 @@
+hydra:
+  run:
+    dir: ./test_runs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+platform: "local"
+mode: "train"
+keyboard_interrupt_save: false
+
+checkpoint_path: "ss_model/checkpoint-epoch24.pth"
+
+metrics:
+    - _target_: src.metric.PESQMetric
+    - _target_: src.metric.SISDRMetric
+
+preprocessing:
+  sr: 16000
+
+data:
+  val:
+    batch_size: 1
+    num_workers: 1
+    datasets:
+      - _target_: src.datasets.CustomDirAudioDataset
+        data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/val_mixtures"
+
+n_gpu: 1
+
+

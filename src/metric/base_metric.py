@@ -45,5 +45,5 @@ class BaseAudioMetric(BaseMetric):
         return ans / len(estimate_short)
 
     @abstractmethod
-    def  _calc_metric(self, estimate, target):
+    def _calc_metric(self, estimate, target):
         pass

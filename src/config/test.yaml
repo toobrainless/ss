@@ -6,7 +6,7 @@ platform: "local"
 mode: "train"
 keyboard_interrupt_save: false
 
-checkpoint_path: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/train_runs/2023-11-12/22-26-02/checkpoint-epoch2.pth"
+checkpoint_path: "ss_model/checkpoint-epoch24.pth"
 
 metrics:
     - _target_: src.metric.PESQMetric
@@ -22,7 +22,6 @@ data:
     datasets:
       - _target_: src.datasets.CustomDirAudioDataset
         data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/val_mixtures"
-        limit: 10
 
 n_gpu: 1
 

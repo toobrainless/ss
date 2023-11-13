@@ -4,7 +4,7 @@ import zipfile
 import gdown
 
 url = (
-    "https://drive.google.com/file/d/1jaZZPGBAl61OHr_xJgb-m8jqn0qOmNdV/view?usp=sharing"
+    "https://drive.google.com/file/d/1750C4PQNwMTWhcu2jXgN6Qm--ZdzquIB/view?usp=sharing"
 )
 output = "spexp.zip"
 
@@ -14,4 +14,4 @@ with zipfile.ZipFile(output, "r") as zip_ref:
     zip_ref.extractall()
 
 os.remove(output)
-os.rename("spexp", "ss_model")
+os.rename("best_model", "ss_model")

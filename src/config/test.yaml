@@ -6,51 +6,23 @@ platform: "local"
 mode: "train"
 keyboard_interrupt_save: false
 
-datasets_targets:
-  local: hw_asr.datasets.LibrispeechDataset
-  datasphere: hw_asr.datasets.DataSphereLibrispeechDataset
-
-test_clean:
-  _target_: ${datasets_targets[${platform}]}
-  part: "test-clean"
-
-test_other:
-  _target_: ${datasets_targets[${platform}]}
-  part: "test-other"
-
-checkpoint_path: "asr_model/checkpoint-epoch22.pth"
+checkpoint_path: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/train_runs/2023-11-12/22-26-02/checkpoint-epoch2.pth"
 
 metrics:
-    - _target_: hw_asr.metric.ArgmaxWERCERMetric
-      name: ARGMAX
-    - _target_: hw_asr.metric.BeamSearchWERCERMetric
-      name: BS
-      beam_size: 150
-    - _target_: hw_asr.metric.LMBeamSearchWERCERMetric
-      name: BS+LM
-      beam_size: 150
-    # - _target_: hw_asr.metric.CustomBeamSearchWERCERMetric
-    #   name: CUSTOM BS
-    #   beam_size: 4
+    - _target_: src.metric.PESQMetric
+    - _target_: src.metric.SISDRMetric
 
 preprocessing:
   sr: 16000
-  spectrogram:
-    _target_: torchaudio.transforms.MelSpectrogram
-    n_mels: 80
-  log_spec: true
 
 data:
-  test-other:
-    batch_size: 8
-    num_workers: 8
+  val:
+    batch_size: 1
+    num_workers: 1
     datasets:
-      - ${test_other}
-  test-clean:
-    batch_size: 8
-    num_workers: 8
-    datasets:
-      - ${test_clean}
+      - _target_: src.datasets.CustomDirAudioDataset
+        data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/val_mixtures"
+        limit: 10
 
 n_gpu: 1
 

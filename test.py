@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from string import ascii_lowercase
+
 import hydra
 import torch
 from hydra.utils import get_original_cwd, instantiate, to_absolute_path
@@ -36,15 +36,11 @@ def main(test_cfg: DictConfig):
     # define cpu or gpu if possible
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # text_encoder
-    alphabet = list(ascii_lowercase + " ")
-    text_encoder = instantiate(model_cfg.text_encoder, alphabet=alphabet)
-
     # setup data_loader instances
-    dataloaders = get_dataloaders(test_cfg, text_encoder)
+    dataloaders = get_dataloaders(test_cfg)
 
     # build model architecture
-    model = instantiate(model_cfg["arch"], n_class=len(text_encoder))
+    model = instantiate(model_cfg["arch"])
     logger.info(model)
 
     logger.info("Loading checkpoint: {} ...".format(test_cfg["checkpoint_path"]))
@@ -58,29 +54,25 @@ def main(test_cfg: DictConfig):
     model = model.to(device)
     model.eval()
 
-    metrics = [
-        instantiate(metric, text_encoder=text_encoder) for metric in test_cfg["metrics"]
-    ]
+    metrics = [instantiate(metric) for metric in test_cfg["metrics"]]
     tracker = MetricTracker(*[m for m_list in metrics for m in m_list.get_metrics()])
     with torch.no_grad():
         for name, dataloader in dataloaders.items():
             print(name)
             for batch_num, batch in enumerate(tqdm(dataloader)):
                 batch = Trainer.move_batch_to_device(batch, device)
-                output = model(**batch)
-
-                if type(output) is dict:
-                    batch.update(output)
-                else:
-                    batch["logits"] = output
-                batch["log_probs"] = torch.log_softmax(batch["logits"], dim=-1)
-                batch["log_probs_length"] = model.transform_input_lengths(
-                    batch["spectrogram_length"]
+                outputs = model(
+                    batch["mix_audio"], batch["ref_audio"], batch["ref_length"]
                 )
-                batch["probs"] = batch["log_probs"].exp().cpu()
-                batch["argmax"] = batch["probs"].argmax(-1)
+
+                batch.update(outputs)
+
                 for met in metrics:
-                    tracker.update(met.name, met(**batch))
+                    met_result = met(**batch).item()
+                    if isinstance(met_result, torch.Tensor):
+                        tracker.update(met.name, met_result.item())
+                    else:
+                        tracker.update(met.name, met_result)
 
             print(f"{name} -- done")
             print("Results:")

@@ -1,6 +1,6 @@
 # ASR
 
-This is a repository for ASR homework with implementation of Conformer model and some experiments with it. Also that repository can be used as a template for other projects.
+This is a repository for Speaker Separation homework with implementation of SpEx+ model and some experiments with it. Also that repository can be used as a template for other projects.
 
 ## Getting Started
 
@@ -16,7 +16,7 @@ Clone the repository into your local folder:
 
 ```bash
 cd <path/to/local/folder>
-git clone https://github.com/toobrainless/dla_template -b asr
+git clone -b ss https://github.com/toobrainless/ss
 ```
 
 Setup requirements with poetry
@@ -25,7 +25,7 @@ Setup requirements with poetry
 cd <path/to/cloned/ASR/project>
 poetry install
 ```
-<!-- Надо написать на английском: теперь вы можете использовать poetry run чтобы использовать среду -->
+
 Now you can use `poetry run` to use environment. For example, `poetry run python3 train.py`, for more usability read [poetry documentation](https://python-poetry.org/docs/).
 
 ### Setup heavy stuff

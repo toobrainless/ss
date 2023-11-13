@@ -180,10 +180,8 @@ class Trainer(BaseTrainer):
         outputs = self.model(
             batch["mix_audio"], batch["ref_audio"], batch["ref_length"]
         )
-        if isinstance(outputs, dict):
-            batch.update(outputs)
-        else:
-            batch["logits"] = outputs
+
+        batch.update(outputs)
         batch["loss"] = self.criterion(
             batch["estimate_short"],
             batch["estimate_middle"],

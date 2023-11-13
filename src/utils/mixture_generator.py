@@ -115,9 +115,9 @@ def create_mix(
     )
 
     snr = np.clip(
-        np.random.normal(snr_levels["loc"], snr_levels["scale"] / 3),
-        -snr_levels["scale"],
-        snr_levels["scale"],
+        np.random.normal(snr_levels["loc"], snr_levels["tripled_scale"] / 3),
+        -snr_levels["tripled_scale"],
+        snr_levels["tripled_scale"],
     )
 
     if not test:

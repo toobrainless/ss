@@ -1,6 +1,6 @@
 from torchmetrics.audio.pesq import PerceptualEvaluationSpeechQuality
 
-from .base_metric import BaseAudioMetric, BaseMetric
+from .base_metric import BaseAudioMetric
 
 
 class PESQMetric(BaseAudioMetric):

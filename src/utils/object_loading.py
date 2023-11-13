@@ -7,7 +7,6 @@ from torch.utils.data import ConcatDataset, DataLoader
 import src.augmentations
 import src.datasets
 from src.collate_fn.collate import collate_fn
-from src.text_encoder.base_text_encoder import BaseTextEncoder
 
 
 def get_dataloaders(cfg: DictConfig):

@@ -9,7 +9,7 @@ class SpExPlusCriterion(nn.Module):
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
-        self.ce = nn.CrossEntropyLoss()
+        self.ce = nn.CrossEntropyLoss(reduction="mean")
 
     def forward(
         self,
@@ -19,7 +19,7 @@ class SpExPlusCriterion(nn.Module):
         target_audio,
         target_class,
         logits,
-        return_ce=False,
+        include_ce=False,
     ):
         estimate_short = estimate_short - estimate_short.mean(dim=-1, keepdim=True)
         estimate_middle = estimate_middle - estimate_middle.mean(dim=-1, keepdim=True)
@@ -30,12 +30,12 @@ class SpExPlusCriterion(nn.Module):
         si_sdr_long = si_sdr(estimate_long, target_audio)
 
         si_sdr_loss = -(
-            (1 - self.alpha - self.beta) * si_sdr_short.sum()
-            + self.alpha * si_sdr_middle.sum()
-            + self.beta * si_sdr_long.sum()
+            (1 - self.alpha - self.beta) * si_sdr_short.mean()
+            + self.alpha * si_sdr_middle.mean()
+            + self.beta * si_sdr_long.mean()
         )
 
-        if not return_ce:
+        if not include_ce:
             return si_sdr_loss
 
         ce_loss = self.ce(logits, target_class)

@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "asr-hw"
+name = "SpEx+"
 version = "0.1.0"
-description = "My ASR homework"
+description = "My SS homework"
 authors = ["Artur Gimranov"]
 readme = "README.md"
 

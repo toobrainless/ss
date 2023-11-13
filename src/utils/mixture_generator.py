@@ -6,7 +6,6 @@ from concurrent.futures import ProcessPoolExecutor
 from glob import glob
 
 import librosa
-import matplotlib.pyplot as plt
 import numpy as np
 import pyloudnorm as pyln
 import soundfile as sf
@@ -63,7 +62,9 @@ def fix_length(s1, s2, min_or_max="max"):
     return s1, s2
 
 
-def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs):
+def create_mix(
+    idx, triplet, snr_levels, out_dir, test=False, sr=16000, ref_duration=7, **kwargs
+):
     trim_db, vad_db = kwargs["trim_db"], kwargs["vad_db"]
     audioLen = kwargs["audioLen"]
 
@@ -76,7 +77,7 @@ def create_mix(idx, triplet, snr_levels, out_dir, test=False, sr=16000, **kwargs
     s1, _ = sf.read(os.path.join("", s1_path))
     s2, _ = sf.read(os.path.join("", s2_path))
     ref, _ = sf.read(os.path.join("", ref_path))
-    ref = ref[: 16000 * 7]
+    ref = ref[: sr * ref_duration]
 
     meter = pyln.Meter(sr)  # create BS.1770 meter
 
@@ -243,11 +244,13 @@ class MixtureGenerator:
 
     def generate_mixes(
         self,
-        snr_levels={"loc": 0.0, "scale": 0.0},
+        snr_levels=None,
         num_workers=10,
         update_steps=10,
         **kwargs,
     ):
+        if snr_levels is None:
+            snr_levels = {"loc": 0.0, "tripled_scale": 0.0}
         triplets = self.generate_triplets()
 
         with ProcessPoolExecutor(max_workers=num_workers) as pool:

@@ -3,3 +3,11 @@ from .spexp.speaker_extractor import SpeakerExtractor
 from .spexp.speech_decoder import SpeechDecoder
 from .spexp.speech_encoder import SpeechEncoder
 from .spexp.spexp import SpExPlus
+
+__all__ = [
+    "SpeakerEncoder",
+    "SpeakerExtractor",
+    "SpeechDecoder",
+    "SpeechEncoder",
+    "SpExPlus",
+]

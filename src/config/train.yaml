@@ -4,8 +4,8 @@ hydra:
 
 data:
   train:
-    batch_size: 8
-    num_workers: 8
+    batch_size: 4
+    num_workers: 4
     datasets: 
       - _target_: src.datasets.CustomDirAudioDataset
         data_dir: "/home/hdilab04/arturgimranov/ss/train_mixtures"
@@ -24,6 +24,7 @@ arch:
   tcn_kernel_size: 3
   tcn_num_blocks: 8
   tcn_num_stacks: 4
+  num_resnet_blocks: 3
   L1: 40
   L2: 160
   L3: 320

@@ -1,17 +1,11 @@
-import random
 from pathlib import Path
 from random import shuffle
 
 import pandas as pd
-import PIL
 import torch
-import torch.nn.functional as F
 from torch.nn.utils import clip_grad_norm_
-from torchvision.transforms import ToTensor
 from tqdm import tqdm
 
-from src.logger.utils import plot_spectrogram_to_buf
-from src.text_encoder import BaseTextEncoder
 from src.utils import MetricTracker, inf_loop, normalize_loud
 
 from .base_trainer import BaseTrainer
@@ -197,7 +191,7 @@ class Trainer(BaseTrainer):
             batch["target_audio"],
             batch["ref_target"],
             batch["logits"],
-            return_ce=True,
+            include_ce=True,
         )
         # print(f"{batch.keys()=}")
         if (batch_num + 1) % self.accumulation_steps == 0:

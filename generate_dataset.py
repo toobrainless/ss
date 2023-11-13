@@ -45,7 +45,7 @@ from src.utils.mixture_generator import LibriSpeechSpeakerFiles, MixtureGenerato
 @click.option(
     "--num_workers",
     "-nw",
-    default=2,
+    default=4,
     help="Number of workers to use",
 )
 @click.option(
@@ -85,7 +85,7 @@ def main(
     )
 
     mixer_train.generate_mixes(
-        snr_levels={"loc": 0, "scale": 5},
+        snr_levels={"loc": 0, "tripled_scale": 5},
         num_workers=num_workers,
         update_steps=100,
         trim_db=20,
@@ -94,7 +94,7 @@ def main(
     )
 
     mixer_val.generate_mixes(
-        snr_levels={"loc": 0, "scale": 0},
+        snr_levels={"loc": 0, "tripled_scale": 0},
         num_workers=num_workers,
         update_steps=100,
         trim_db=None,

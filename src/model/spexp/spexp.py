@@ -15,6 +15,7 @@ class SpExPlus(nn.Module):
         tcn_kernel_size,
         tcn_num_blocks,
         tcn_num_stacks,
+        num_resnet_blocks,
         L1,
         L2,
         L3,
@@ -23,7 +24,9 @@ class SpExPlus(nn.Module):
     ):
         super().__init__()
         self.speech_encoder = SpeechEncoder(L1, L2, L3, N)
-        self.speaker_encoder = SpeakerEncoder(N, speaker_dim, n_classes)
+        self.speaker_encoder = SpeakerEncoder(
+            N, speaker_dim, n_classes, num_resnet_blocks=num_resnet_blocks
+        )
         self.speaker_extractor = SpeakerExtractor(
             N,
             speaker_dim,

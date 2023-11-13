@@ -117,8 +117,9 @@ test_runs/
 __MACOSX/
 
 # sandboxes
-sandbox.*
+sandbox*
 formatter.py
+mixer.ipynb
 
 # heavy stuff
 language_model

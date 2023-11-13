@@ -8,13 +8,13 @@ data:
     num_workers: 8
     datasets: 
       - _target_: src.datasets.CustomDirAudioDataset
-        data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/train_mixtures"
+        data_dir: "/home/hdilab04/arturgimranov/ss/train_mixtures"
   val:
     batch_size: 1
     num_workers: 1
     datasets:
       - _target_: src.datasets.CustomDirAudioDataset
-        data_dir: "/Users/arturgimranov/CS/fourth_year/dla_course/ss/val_mixtures"
+        data_dir: "/home/hdilab04/arturgimranov/ss/val_mixtures"
 preprocessing:
   sr: 16000
 arch:
@@ -30,8 +30,6 @@ arch:
   N: 256
   n_classes: 100
 n_gpu: 1
-loss:
-  _target_: hw_asr.loss.CTCLoss
 metrics:
   shared: 
     - _target_: src.metric.AccuracyMetric
@@ -56,7 +54,7 @@ lr_scheduler:
   min_lr: 1e-6
   verbose: True
 trainer:
-  epochs: 100
+  epochs: 1000
   save_dir: "saved/"
   save_period: 1
   verbosity: 2
@@ -64,8 +62,8 @@ trainer:
   early_stop: 100
   visualize: "wandb"
   wandb_project: "ss_project"
-  len_epoch: 100
+  len_epoch: 2000
   grad_norm_clip: 10
-  log_step: 1
+  log_step: 100
   accumulation_steps: 1
 resume: null

@@ -99,6 +99,7 @@ class Trainer(BaseTrainer):
             "mix_audio",
             "target_audio",
             "ref_target",
+            "ref_length",
         ]:
             batch[tensor_for_gpu] = batch[tensor_for_gpu].to(device)
         return batch
@@ -328,21 +329,21 @@ class Trainer(BaseTrainer):
                 [ref_length, target_length, mix_length],
             ):
                 rows[triplet_id][name] = self.writer.wandb.Audio(
-                    normalize_loud(audio[:length].detach().numpy()),
+                    normalize_loud(audio[:length].detach().cpu().numpy()),
                     sample_rate=self.config["preprocessing"]["sr"],
                 )
             rows[triplet_id]["ref_speaker_id"] = ref_speaker_id
             rows[triplet_id]["ref_target"] = ref_target
             rows[triplet_id]["estimate_short"] = self.writer.wandb.Audio(
-                normalize_loud(estimate_short.detach().numpy()[:mix_length]),
+                normalize_loud(estimate_short.detach().cpu().numpy()[:mix_length]),
                 sample_rate=self.config["preprocessing"]["sr"],
             )
             rows[triplet_id]["estimate_middle"] = self.writer.wandb.Audio(
-                normalize_loud(estimate_middle.detach().numpy()[:mix_length]),
+                normalize_loud(estimate_middle.detach().cpu().numpy()[:mix_length]),
                 sample_rate=self.config["preprocessing"]["sr"],
             )
             rows[triplet_id]["estimate_long"] = self.writer.wandb.Audio(
-                normalize_loud(estimate_long.detach().numpy()[:mix_length]),
+                normalize_loud(estimate_long.detach().cpu().numpy()[:mix_length]),
                 sample_rate=self.config["preprocessing"]["sr"],
             )
         self.writer.add_table(

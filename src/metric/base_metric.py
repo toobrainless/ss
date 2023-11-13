@@ -27,13 +27,13 @@ class BaseAudioMetric(BaseMetric):
         ans = 0
         for estimate_short_1d, target_audio_1d in zip(estimate_short, target_audio):
             normalize_estimate = normalize_loud(
-                estimate_short_1d.detach().numpy(),
+                estimate_short_1d.detach().cpu().numpy(),
                 meter=self.meter,
                 target_loudness=self.target_loudness,
             )
 
             normalize_target = normalize_loud(
-                target_audio_1d.detach().numpy(),
+                target_audio_1d.detach().cpu().numpy(),
                 meter=self.meter,
                 target_loudness=self.target_loudness,
             )
@@ -45,5 +45,5 @@ class BaseAudioMetric(BaseMetric):
         return ans / len(estimate_short)
 
     @abstractmethod
-    def _calc_metric(self, estimate, target):
+    def  _calc_metric(self, estimate, target):
         pass

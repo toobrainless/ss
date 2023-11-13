@@ -1,4 +1,4 @@
-# ASR
+# SS
 
 This is a repository for Speaker Separation homework with implementation of SpEx+ model and some experiments with it. Also that repository can be used as a template for other projects.
 
@@ -31,8 +31,7 @@ Now you can use `poetry run` to use environment. For example, `poetry run python
 ### Setup heavy stuff
 
 ```bash
-poetry run python3 setup_lm_model.py
-poetry run python3 setup_conformer.py
+poetry run python3 setup_spexp.py
 ```
 
 ## Training

@@ -1,0 +1,70 @@
+hydra:
+  run:
+    dir: ./train_runs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+
+data:
+  train:
+    batch_size: 4
+    num_workers: 4
+    datasets: 
+      - _target_: src.datasets.CustomDirAudioDataset
+        data_dir: "/home/hdilab04/arturgimranov/ss/train_mixtures"
+  val:
+    batch_size: 1
+    num_workers: 1
+    datasets:
+      - _target_: src.datasets.CustomDirAudioDataset
+        data_dir: "/home/hdilab04/arturgimranov/ss/val_mixtures"
+preprocessing:
+  sr: 16000
+arch:
+  _target_: src.model.SpExPlus
+  speaker_dim: 256
+  tcn_block_dim: 256
+  tcn_kernel_size: 3
+  tcn_num_blocks: 8
+  tcn_num_stacks: 4
+  num_resnet_blocks: 3
+  L1: 40
+  L2: 160
+  L3: 320
+  N: 256
+  n_classes: 100
+n_gpu: 1
+metrics:
+  shared: 
+    - _target_: src.metric.AccuracyMetric
+    - _target_: src.metric.PESQMetric
+    - _target_: src.metric.SISDRMetric
+  train: []
+  evaluation: []
+criterion:
+  _target_: src.criterion.SpExPlusCriterion
+  alpha: 0.1
+  beta: 0.1
+  gamma: 0.5
+optimizer:
+  _target_: torch.optim.AdamW
+  lr: 1e-3
+  weight_decay: 1e-5
+lr_scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  mode: min
+  factor: 0.5
+  patience: 2
+  min_lr: 1e-6
+  verbose: True
+trainer:
+  epochs: 1000
+  save_dir: "saved/"
+  save_period: 1
+  verbosity: 2
+  monitor: "min val_loss"
+  early_stop: 100
+  visualize: "wandb"
+  wandb_project: "ss_project"
+  len_epoch: 2000
+  grad_norm_clip: 10
+  log_step: 100
+  accumulation_steps: 1
+resume: null
